@@ -1,0 +1,186 @@
+[
+  {
+    "name": "a sibling worktree moves under the worktree root",
+    "category": "worktree-path",
+    "command": "git worktree add ../ledger-12 -b feat/12-ledger origin/main",
+    "expected": "git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger origin/main"
+  },
+  {
+    "name": "a worktree under the root stays as it is",
+    "category": "worktree-path",
+    "command": "git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger origin/main",
+    "expected": null
+  },
+  {
+    "name": "an absolute path under the root stays as it is",
+    "category": "worktree-path",
+    "command": "git worktree add /Users/dev/repo/.claude/worktrees/ledger-12 feat/12-ledger",
+    "expected": null
+  },
+  {
+    "name": "an option before the path does not hide the path",
+    "category": "worktree-path",
+    "command": "git worktree add -b feat/12-ledger /tmp/ledger-12 origin/main",
+    "expected": "git worktree add -b feat/12-ledger .claude/worktrees/ledger-12 origin/main"
+  },
+  {
+    "name": "a quoted path with a space moves and keeps its last segment",
+    "category": "worktree-path",
+    "command": "git worktree add \"../my work/ledger-12\" -b feat/12-ledger",
+    "expected": "git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger"
+  },
+  {
+    "name": "a fetch before the worktree add stays in place",
+    "category": "worktree-path",
+    "command": "git fetch origin main && git worktree add ../ledger-12 -b feat/12-ledger origin/main",
+    "expected": "git fetch origin main && git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger origin/main"
+  },
+  {
+    "name": "a separator without spaces still ends the statement",
+    "category": "worktree-path",
+    "command": "git fetch origin main&&git worktree add ../ledger-12 -b feat/12-ledger origin/main",
+    "expected": "git fetch origin main&&git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger origin/main"
+  },
+  {
+    "name": "checkout -b in the main checkout becomes a worktree",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git checkout -b feat/12-ledger",
+    "expected": "git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger && cd .claude/worktrees/ledger-12"
+  },
+  {
+    "name": "switch -c with a start point keeps the start point",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git switch -c fix/7-session origin/main",
+    "expected": "git worktree add .claude/worktrees/ledger-7 -b fix/7-session origin/main && cd .claude/worktrees/ledger-7"
+  },
+  {
+    "name": "switch to an existing branch becomes a worktree of that branch",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git switch feat/12-ledger",
+    "expected": "git worktree add .claude/worktrees/ledger-12 feat/12-ledger && cd .claude/worktrees/ledger-12"
+  },
+  {
+    "name": "a branch without an issue number gets a safe directory name",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git checkout -b spike/try-kafka",
+    "expected": "git worktree add .claude/worktrees/spike-try-kafka -b spike/try-kafka && cd .claude/worktrees/spike-try-kafka"
+  },
+  {
+    "name": "the rewrite stops at the end of the statement",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git checkout -b feat/12-ledger && pnpm install",
+    "expected": "git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger && cd .claude/worktrees/ledger-12 && pnpm install"
+  },
+  {
+    "name": "a branch inside a worktree is left alone",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo/.claude/worktrees/ledger-12",
+    "command": "git checkout -b feat/13-payouts",
+    "expected": null
+  },
+  {
+    "name": "a switch back to the default branch is left alone",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git switch main",
+    "expected": null
+  },
+  {
+    "name": "a switch to the previous branch is left alone",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git switch -",
+    "expected": null
+  },
+  {
+    "name": "a checkout of a file is not a branch",
+    "category": "branch-checkout",
+    "cwd": "/Users/dev/repo",
+    "command": "git checkout -- src/ledger.ts",
+    "expected": null
+  },
+  {
+    "name": "a pull request without --draft becomes a draft",
+    "category": "draft-pr",
+    "command": "gh pr create --fill",
+    "expected": "gh pr create --fill --draft"
+  },
+  {
+    "name": "a pull request with --draft stays as it is",
+    "category": "draft-pr",
+    "command": "gh pr create --draft --fill",
+    "expected": null
+  },
+  {
+    "name": "a pull request with -d stays as it is",
+    "category": "draft-pr",
+    "command": "gh pr create -d --fill",
+    "expected": null
+  },
+  {
+    "name": "--draft goes into the gh statement and not after a later command",
+    "category": "draft-pr",
+    "command": "gh pr create --fill && gh pr view --web",
+    "expected": "gh pr create --fill --draft && gh pr view --web"
+  },
+  {
+    "name": "a --draft in a later command does not count",
+    "category": "draft-pr",
+    "command": "gh pr create --fill; echo --draft",
+    "expected": "gh pr create --fill --draft; echo --draft"
+  },
+  {
+    "name": "a redirection with an ampersand does not split the statement",
+    "category": "draft-pr",
+    "command": "gh pr create --fill 2>&1",
+    "expected": "gh pr create --fill 2>&1 --draft"
+  },
+  {
+    "name": "a heredoc body is not changed",
+    "category": "draft-pr",
+    "command": "gh pr create --title \"Ledger\" --body \"$(cat <<'EOF'\nNo draft here.\nEOF\n)\"",
+    "expected": "gh pr create --title \"Ledger\" --body \"$(cat <<'EOF'\nNo draft here.\nEOF\n)\" --draft"
+  },
+  {
+    "name": "one command with every convention broken",
+    "category": "combined",
+    "cwd": "/Users/dev/repo",
+    "command": "git worktree add ../ledger-12 -b feat/12-ledger origin/main && gh pr create --fill",
+    "expected": "git worktree add .claude/worktrees/ledger-12 -b feat/12-ledger origin/main && gh pr create --fill --draft"
+  },
+  {
+    "name": "an unrelated command is left alone",
+    "category": "no-op",
+    "command": "pnpm test",
+    "expected": null
+  },
+  {
+    "name": "a word that only contains git is not git",
+    "category": "no-op",
+    "command": "echo 'git checkout -b feat/1-x'",
+    "expected": null
+  },
+  {
+    "name": "a quoted command substitution in a branch name is not rewritten",
+    "category": "shell-injection",
+    "command": "git switch -c 'feat/123-foo$(echo SHOULD_NOT_EXECUTE)'",
+    "expected": null
+  },
+  {
+    "name": "a quoted backtick in a branch name is not rewritten",
+    "category": "shell-injection",
+    "command": "git checkout -b 'feat/1-a`id`'",
+    "expected": null
+  },
+  {
+    "name": "a quoted command substitution in a worktree path is not rewritten",
+    "category": "shell-injection",
+    "command": "git worktree add '../x$(id)' -b feat/1-x",
+    "expected": null
+  }
+]

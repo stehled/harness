@@ -1,0 +1,10 @@
+packages:
+  - tools/*
+
+catalog:
+  "@biomejs/biome": ^2.5.15
+  vitest: ^5.0.5
+
+allowBuilds:
+  "@biomejs/biome": true
+  esbuild: true

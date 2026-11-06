@@ -1,0 +1,9 @@
+.DS_Store
+.idea
+node_modules/
+coverage/
+.env
+.env.local
+.claude/worktrees/
+.claude/settings.local.json
+HANDOVER.md

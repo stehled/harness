@@ -1,0 +1,22 @@
+{
+  "name": "agent-harness",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.24.0",
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "test": "pnpm -r --if-present run test",
+    "eval": "node evals/hooks/run.mjs",
+    "verify": "pnpm lint && pnpm test && pnpm eval",
+    "env:init": "node tools/worktree/env-init.mjs",
+    "infra:up": "docker compose up -d --wait",
+    "infra:down": "docker compose down"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:"
+  }
+}

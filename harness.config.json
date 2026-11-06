@@ -1,0 +1,7 @@
+{
+  "project": "agent-harness",
+  "defaultBranch": "main",
+  "reviewer": "stehled",
+  "branchTypes": ["feat", "fix", "chore", "docs"],
+  "worktreeRoot": ".claude/worktrees"
+}

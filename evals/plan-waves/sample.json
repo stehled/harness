@@ -1,0 +1,13 @@
+[
+  {
+    "ticket": 30,
+    "card": "writes:\n  certain  new   apps/api/src/ledger/{ledger.controller,ledger.service}.ts\n  certain  reg   packages/contracts/src/index.ts\n  likely   edit  apps/api/src/app.module.ts\n  possible cfg   .env.example\nreads: none",
+    "actual": [
+      "apps/api/src/ledger/ledger.controller.ts",
+      "apps/api/src/ledger/ledger.service.ts",
+      "apps/api/src/ledger/ledger.integration.test.ts",
+      "packages/contracts/src/index.ts",
+      "apps/api/src/app.module.ts"
+    ]
+  }
+]
